@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>益起跑 2026</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+{% raw %}
+<div id="app">
+    <!-- 顶部标题栏 -->
+    <header class="header">
+        <img src="/static/img/GDEHS.png" class="logo" alt="校徽">
+        <h1 class="site-title">益起跑 <span class="title-year">2026</span></h1>
+        <img src="/static/img/PBP.svg" class="pbp" alt="">
+    </header>
+
+    <main class="main">
+        <div class="dashboard">
+            <div class="left-panel">
+                <!-- 总里程大卡片（上方大部分位置） -->
+                <section class="mileage-card">
+                    <div class="mileage-label">总里程</div>
+                    <div class="mileage-number">
+                        <span v-text="totalText"></span><span class="mileage-unit">m</span>
+                    </div>
+                </section>
+
+                <!-- 格言卡片 -->
+                <section class="quote-card">
+                    <div class="quote-body">
+                        <p class="quote-text" v-text="quote"></p>
+                    </div>
+                    <div class="quote-tab"><span>格言</span></div>
+                </section>
+            </div>
+
+            <!-- 右侧：排行榜直到底端，底端留出位置放数据录入按钮 -->
+            <div class="right-panel">
+                <section class="class-card">
+                    <div class="class-card-head">
+                        <h2>里程排行</h2>
+                    </div>
+                    <div class="class-list">
+                        <div class="class-row" v-for="(c, i) in sortedClasses" :key="c.class_code">
+                            <span class="class-rank" v-text="i + 1"></span>
+                            <span class="class-name" v-text="formatClass(c.class_code)"></span>
+                            <span class="class-mileage" v-text="formatDistance(c.distance)"></span>
+                        </div>
+                        <div class="class-empty" v-if="sortedClasses.length === 0">暂无数据</div>
+                    </div>
+                </section>
+                <a class="nav-btn" href="/config.html">数据录入</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">广东实验中学 · 益起跑</footer>
+</div>
+{% endraw %}
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/js/index.js"></script>
+</body>
+</html>

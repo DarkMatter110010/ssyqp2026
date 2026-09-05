@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据录入</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/config.css">
+</head>
+<body>
+{% raw %}
+<div id="app">
+    <!-- 顶部标题栏 -->
+    <header class="header">
+        <img src="/static/img/GDEHS.png" class="logo" alt="校徽">
+        <h1 class="site-title">班级里程录入</h1>
+        <img src="/static/img/PBP.svg" class="pbp" alt="">
+    </header>
+
+    <main class="main">
+        <form class="entry-card" @submit.prevent="submit">
+            <h2 class="card-title">录入信息</h2>
+
+            <!-- 班级代号 -->
+            <div class="field">
+                <label for="class_code">班级代号</label>
+                <input id="class_code" type="text" v-model.trim="classCode"
+                        maxlength="3" autocomplete="off"
+                        @focus="openKeypad('class')" @blur="scheduleClose('class')">
+            </div>
+
+            <!-- 里程 -->
+            <div class="field">
+                <label for="distance">里程</label>
+                <div class="distance-wrap">
+                    <input id="distance" type="text" inputmode="numeric" v-model.trim="distance"
+                            maxlength="7" min="0" max="9999999" autocomplete="off"
+                            @focus="openKeypad('distance')" @blur="scheduleClose('distance')"
+                            @wheel.prevent="onWheel">
+                    <span class="unit">米</span>
+                </div>
+                <p class="hint">滚动鼠标滚轮，可按400米步进调整</p>
+            </div>
+
+            <!-- 密码 -->
+            <div class="field">
+                <label for="password">密码</label>
+                <input id="password" type="password" v-model="password"
+                        autocomplete="new-password">
+            </div>
+
+            <button type="submit" class="submit-btn" :disabled="submitting">
+                <span v-if="!submitting">提交</span>
+                <span v-else>提交中…</span>
+            </button>
+
+            <!-- 返回主页按钮（位于提交按钮下方） -->
+            <a class="back-btn" href="/index.html">返回主页</a>
+
+            <!-- 处理状态展示：成功绿色 / 失败红色 -->
+            <div class="status" :class="statusClass" v-if="statusText" v-text="statusText"></div>
+        </form>
+    </main>
+
+    <!-- 小键盘 -->
+    <div class="keypad" v-if="activeKeypad">
+        <div class="keypad-title">
+            <span v-text="activeKeypad === 'class' ? '班级代号小键盘' : '里程小键盘'"></span>
+            <button type="button" class="keypad-close" @mousedown.prevent="closeKeypad">收起</button>
+        </div>
+        <div class="key-grid">
+            <button type="button" class="key" v-for="n in 9" :key="n" @mousedown.prevent="keypadPress(String(n))" v-text="n"></button>
+            <button type="button" class="key key-clear" @mousedown.prevent="keypadClear">清空</button>
+            <button type="button" class="key key-zero" @mousedown.prevent="keypadPress('0')">0</button>
+            <button type="button" class="key key-back" @mousedown.prevent="keypadBack">退格</button>
+            <button type="button" class="key key-done" @mousedown.prevent="closeKeypad">完成</button>
+        </div>
+    </div>
+</div>
+{% endraw %}
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/js/config.js"></script>
+</body>
+</html>

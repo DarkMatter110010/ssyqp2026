@@ -1,0 +1,20 @@
+{
+  "database": {
+    "path": "data.db",
+    "table": "data_table"
+  },
+  "server": {
+    "host": "127.100.10.1",
+    "port": 5050,
+    "access_url": "https://127.100.10.1:7443/"
+  },
+  "ssl": {
+    "enabled": true,
+    "cert": "ssl/cert.pem",
+    "key": "ssl/key.pem"
+  },
+  "password": {
+    "hash": "82ba5984a54ddf8dc1a977aca7d5c9f5f22cb6b7c8a6098329da3d9760d24291",
+    "salt": "b7c85d29-8b56-468e-9c17-f85eddb75bc9"
+  }
+}
