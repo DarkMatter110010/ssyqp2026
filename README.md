@@ -8,7 +8,7 @@
 
 > 让每一次奔跑都被看见 —— 班级累计里程，为爱并肩向前
 
-`2026`　·　`Windows 内网部署`　·　`Python / Flask`　·　`Vue 3`　·　`SQLite`　·　`Nginx`　·　`PyQt6`
+`Python / Flask`　·　`Vue 3`　·　`SQLite`　·　`Nginx`　·　`PyQt6`
 
 </div>
 
