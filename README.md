@@ -46,10 +46,10 @@
 ```
 ┌──────────────┐   ┌────────────────┐   ┌────────────────────┐   ┌───────────┐
 │   现场大屏    │   │  HTTPS 网关     │   │   Flask 后端        │   │  SQLite   │
-│ Vue 3 看板   │──▶│  Nginx :7443   │──▶│  127.100.10.1:5050 │──▶│  data.db  │
+│ Vue 3 看板   │──▶│  Nginx :10000   │──▶│  127.0.0.1:5050 │──▶│  data.db  │
 │   (浏览器)    │   │  (反向代理+SSL) │   │   (main.py)        │   │  (单文件)  │
 └──────────────┘   └────────────────┘   └────────────────────┘   └───────────┘
-┌──────────────┐            ▲ HTTPS(7443)
+┌──────────────┐            ▲ HTTPS(10000)
 │   数据录入页   │────────────┘
 │ (config.html)│
 └──────────────┘
@@ -67,7 +67,7 @@
 | --- | --- | --- |
 | 页面展示 | Vue 3（本地 `vue.global.prod.js`，CDN 离线可用） | 大屏看板、数据录入、结果反馈 |
 | Web 服务 | Python Flask | 路由渲染 + 提供 `/api/*` JSON 接口 |
-| 网关层 | Nginx for Windows | `:7443` HTTPS 反向代理到后端 `:5050` |
+| 网关层 | Nginx for Windows | `:10000` HTTPS 反向代理到后端 `:5050` |
 | 数据存储 | SQLite（`server/data.db` 单文件） | 每班一条记录：`班级代号` + `里程(米)` |
 | 桌面端 | PyQt6 | 数据管理客户端 / 本机数据库调试工具 |
 
@@ -124,20 +124,20 @@
 
 1. 清理可能残留的 `nginx.exe` 与占用 `:5050` 的进程；
 2. 启动 Flask 后端（`.venv` 中运行 `server\main.py`）；
-3. 启动内置 Nginx（监听 `https://127.100.10.1:7443`）；
+3. 启动内置 Nginx（监听 `https://127.0.0.1:10000`）；
 4. 自动打开浏览器访问 **大屏主页**；
 5. 同时弹出 **数据管理客户端** 窗口。
 
 浏览器访问地址：
 
 ```
-https://127.100.10.1:7443/
+https://127.0.0.1:10000/
 ```
 
 | 页面 | 地址 |
 | --- | --- |
-| 🖥️ 里程大屏主页 | `https://127.100.10.1:7443/` |
-| 📝 班级里程录入 | `https://127.100.10.1:7443/config.html` |
+| 🖥️ 里程大屏主页 | `https://127.0.0.1:10000/` |
+| 📝 班级里程录入 | `https://127.0.0.1:10000/config.html` |
 
 ### 3. 一键停止
 
@@ -148,7 +148,7 @@ https://127.100.10.1:7443/
 ### 4. 手动运行（可选）
 
 ```bat
-:: 启动后端（默认 https://127.100.10.1:7443）
+:: 启动后端（默认 https://127.0.0.1:10000）
 .venv\Scripts\python server\main.py
 
 :: 本机数据库调试工具（直连 data.db，不经网络）
@@ -167,8 +167,8 @@ https://127.100.10.1:7443/
 ```json
 {
   "database": { "path": "data.db", "table": "data_table" },
-  "server":   { "host": "127.100.10.1", "port": 5050,
-                "access_url": "https://127.100.10.1:7443/" },
+  "server":   { "host": "127.0.0.1", "port": 5050,
+                "access_url": "https://127.0.0.1:10000/" },
   "ssl":      { "enabled": true, "cert": "ssl/cert.pem", "key": "ssl/key.pem" },
   "password": { "hash": "82ba…24291", "salt": "b7c85d29-…-bc9" }
 }
@@ -186,9 +186,9 @@ https://127.100.10.1:7443/
 
 ```ini
 [server]
-url  = https://127.100.10.1:7443   ; 接口根地址（留空则取 host+port）
-host = 127.100.10.1
-port = 7443
+url  = https://127.0.0.1:10000   ; 接口根地址（留空则取 host+port）
+host = 127.0.0.1
+port = 10000
 
 [security]
 salt = b7c85d29-…-bc9              ; 必须与 server/config.json 的 salt 一致
@@ -257,7 +257,7 @@ selfclean = false                  ; 提交后是否自动清空班级/里程输
 ```powershell
 # 为 201 班累加 400 米
 $body = @{ class_code = "201"; distance = 400; password = "<口令哈希>" } | ConvertTo-Json
-Invoke-RestMethod -Uri "https://127.100.10.1:7443/api/add" `
+Invoke-RestMethod -Uri "https://127.0.0.1:10000/api/add" `
                   -Method Post -ContentType "application/json" -Body $body
 ```
 
@@ -297,7 +297,7 @@ server\ssl\gen_cert.bat
 <details>
 <summary><b>启动后浏览器无法访问页面？</b></summary>
 
-依次排查：① 查看 `server/nginx/logs/error.log`；② 确认 `:5050`、`:7443` 未被其他程序占用
+依次排查：① 查看 `server/nginx/logs/error.log`；② 确认 `:5050`、`:10000` 未被其他程序占用
 （可先执行 `stop.bat` 后重新运行 `start.bat`）；③ 若改动过监听地址，需同步修改
 `config.json`、`nginx/conf/nginx.conf` 与 `settings.ini` 三处。
 </details>
@@ -305,7 +305,7 @@ server\ssl\gen_cert.bat
 <details>
 <summary><b>想在其他电脑（如大屏终端）访问页面？</b></summary>
 
-当前默认地址 `127.100.10.1` 为回环地址，只能在本机访问。若需跨设备访问，请改用服务器
+当前默认地址 `127.0.0.1` 为回环地址，只能在本机访问。若需跨设备访问，请改用服务器
 真实局域网 IP（如 `192.168.x.x`），并同步更新上述三处配置；浏览器首次访问时确认信任自签名证书。
 </details>
 
