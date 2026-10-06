@@ -6,7 +6,7 @@
   "server": {
     "host": "127.100.10.1",
     "port": 5050,
-    "access_url": "https://127.100.10.1:7443/"
+    "access_url": "https://127.0.0.1:10000/"
   },
   "ssl": {
     "enabled": true,

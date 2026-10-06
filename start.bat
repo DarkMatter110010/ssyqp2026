@@ -8,5 +8,5 @@ start "益起跑-Flask后端" /d "%~dp0server" "%~dp0.venv\Scripts\python.exe" m
 start "益起跑-Nginx" /b /d "%~dp0server\nginx" "%~dp0server\nginx\nginx.exe"
 
 cd /d %~dp0
-start "" "https://127.100.10.1:7443"
+start "" "https://127.0.0.1:10000"
 start "" "%~dp0.venv\Scripts\python.exe" "%~dp0data_client\db_client.py"
